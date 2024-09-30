@@ -20,22 +20,20 @@ class MealsService {
     Response response = await dio.get('filter.php?c=Chicken');
     if (response.statusCode == 200) {
       List mealsJson = response.data['meals'];
-      // print(mealsJson.toString());
-      print(mealsJson.map((meal) => MealsByCategory.fromJson(meal)).toList());
       return mealsJson.map((meal) => MealsByCategory.fromJson(meal)).toList();
     } else {
       throw Exception('Failed to load meals');
     }
   }
 
-  Future<List<Meal>> getMeal(String mealId) async {
+  Future<Meal> getMeal(String mealId) async {
     Response response = await dio.get(
       'lookup.php',
       queryParameters: {'i': mealId},
     );
     if (response.statusCode == 200) {
       List mealResponse = response.data['meals'];
-      return mealResponse.map((meal) => Meal.fromJson(meal)).toList();
+      return mealResponse.map((meal) => Meal.fromJson(meal)).toList().first;
     } else {
       throw Exception('Failed to load meal');
     }

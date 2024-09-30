@@ -8,8 +8,8 @@ class AppRouter {
     switch(settings.name) {
       case mealsScreen:
         return MaterialPageRoute(builder: (_) => const MealsScreen());
-      case mealDetailsScreen:
-        return MaterialPageRoute(builder: (_) => const MealsDetailsScreen());
+      // case mealDetailsScreen:
+      //   return MaterialPageRoute(builder: (_) => const MealsDetailsScreen());
       default:
         return MaterialPageRoute(builder: (_) => const Placeholder());
     }

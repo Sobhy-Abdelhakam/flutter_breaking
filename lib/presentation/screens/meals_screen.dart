@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_breaking/data/api_service/meals_service.dart';
 import 'package:flutter_breaking/data/model/meals_by_category.dart';
-
-
+import 'package:flutter_breaking/presentation/screens/details_screen.dart';
 
 class MealsScreen extends StatefulWidget {
   const MealsScreen({super.key});
-  
+
   @override
   State<StatefulWidget> createState() {
     return _MealsState();
   }
-  
 }
 
 class _MealsState extends State<MealsScreen> {
@@ -45,6 +43,16 @@ class _MealsState extends State<MealsScreen> {
                   leading: Image.network(meal.mealThumb),
                   title: Text(meal.mealName),
                   subtitle: Text('Meal ID: ${meal.mealId}'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return MealsDetailsScreen(mealId: meal.mealId);
+                        },
+                      ),
+                    );
+                  },
                 );
               },
             );
@@ -55,5 +63,4 @@ class _MealsState extends State<MealsScreen> {
       ),
     );
   }
-
 }

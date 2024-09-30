@@ -1,5 +1,5 @@
 class Meal {
-  late int id;
+  late String id;
   late String name;
   late String instructions;
   late String thumb;
@@ -8,6 +8,6 @@ class Meal {
     id = json['idMeal'];
     name = json['strMeal'];
     instructions = json['strInstructions'];
-    thumb = json['idMeal'];
+    thumb = json['strMealThumb'];
   }
 }
