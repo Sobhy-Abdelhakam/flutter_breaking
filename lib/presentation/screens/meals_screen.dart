@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_breaking/data/api_service/meals_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_breaking/business_logic/cubit/cubit/meals_cubit.dart';
+import 'package:flutter_breaking/constants/strings.dart';
 import 'package:flutter_breaking/data/model/meals_by_category.dart';
-import 'package:flutter_breaking/presentation/screens/details_screen.dart';
 
 class MealsScreen extends StatefulWidget {
   const MealsScreen({super.key});
@@ -13,11 +14,11 @@ class MealsScreen extends StatefulWidget {
 }
 
 class _MealsState extends State<MealsScreen> {
-  late Future<List<MealsByCategory>> _mealsFuture;
+  late List<MealsByCategory> allMeals;
   @override
   void initState() {
     super.initState();
-    _mealsFuture = MealsService().getMeals();
+    BlocProvider.of<MealsCubit>(context).getAllMeals();
   }
 
   @override
@@ -26,38 +27,68 @@ class _MealsState extends State<MealsScreen> {
       appBar: AppBar(
         title: const Text('Meals List'),
       ),
-      body: FutureBuilder<List<MealsByCategory>>(
-        future: _mealsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            List<MealsByCategory> meals = snapshot.data!;
-            return ListView.builder(
-              itemCount: meals.length,
+      body: BlocBuilder<MealsCubit, MealsState>(
+        builder: (context, state) {
+          if (state is MealsLoaded) {
+            allMeals = state.meals;
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 1,
+                  mainAxisSpacing: 1,
+                  childAspectRatio: 2 / 3),
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: allMeals.length,
               itemBuilder: (context, index) {
-                final meal = meals[index];
-                return ListTile(
-                  leading: Image.network(meal.mealThumb),
-                  title: Text(meal.mealName),
-                  subtitle: Text('Meal ID: ${meal.mealId}'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return MealsDetailsScreen(mealId: meal.mealId);
-                        },
+                final meal = allMeals[index];
+                return Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      color: Colors.amber,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: InkWell(
+                    onTap: (){
+                      Navigator.pushNamed(context, mealDetailsScreen, arguments: meal.mealId);
+                    },
+                    child: GridTile(
+                      footer: Container(
+                        width: double.infinity,
+                        color: Colors.black54,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          meal.mealName,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    );
-                  },
+                      child: Container(
+                        color: Colors.grey,
+                        child: FadeInImage.assetNetwork(
+                          width: double.infinity,
+                          height: double.infinity,
+                          placeholder: 'assets/images/loader_animation.gif',
+                          image: meal.mealThumb,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
                 );
               },
             );
           } else {
-            return const Center(child: Text('No data available'));
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),
