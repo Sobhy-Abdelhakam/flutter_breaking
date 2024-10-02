@@ -12,8 +12,6 @@ class MealsCubit extends Cubit<MealsState> {
 
   MealsCubit(this._mealsRepository) : super(MealsInitial());
 
-  static MealsCubit get(context) => BlocProvider.of(context);
-
   getAllMeals() {
     _mealsRepository.getMeals().then(
       (meals) {
