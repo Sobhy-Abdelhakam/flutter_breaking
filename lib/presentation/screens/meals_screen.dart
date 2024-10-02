@@ -29,7 +29,11 @@ class _MealsState extends State<MealsScreen> {
       ),
       body: BlocBuilder<MealsCubit, MealsState>(
         builder: (context, state) {
-          if (state is MealsLoaded) {
+          if (state is MealsLoading){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is MealsLoaded) {
             allMeals = state.meals;
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -85,10 +89,13 @@ class _MealsState extends State<MealsScreen> {
                 );
               },
             );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
+          } else if (state is MealDetailsError) {
+            final message = state.message;
+            return Center(
+              child: Text(message),
             );
+          } else {
+            return const Center(child: Text('No Data found'),);
           }
         },
       ),

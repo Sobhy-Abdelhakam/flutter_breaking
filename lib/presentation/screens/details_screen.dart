@@ -6,7 +6,7 @@ import 'package:flutter_breaking/data/model/meal.dart';
 class MealsDetailsScreen extends StatefulWidget {
   final String mealId;
   const MealsDetailsScreen({super.key, required this.mealId});
-  
+
   @override
   State<StatefulWidget> createState() {
     return _MealsDetailsState();
@@ -24,43 +24,100 @@ class _MealsDetailsState extends State<MealsDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<MealsCubit, MealsState>(
-        builder: (context, state){
-          if (state is MealDetailsLoading){
-            return const Center(child: CircularProgressIndicator(),);
-          } else if (state is MealDetailsLoaded) {
-            meal = state.meal;
-            return Column(
+        body: BlocBuilder<MealsCubit, MealsState>(builder: (context, state) {
+      if (state is MealDetailsLoading) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (state is MealDetailsLoaded) {
+        meal = state.meal;
+        return CustomScrollView(slivers: [
+          SliverAppBar(
+            expandedHeight: 500,
+            pinned: true,
+            // stretch: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(meal.name),
+              background: Image.network(
+                meal.thumb,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
+            const Column(
               children: [
-                Image.network(meal.thumb)
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
+                Text('data'),
               ],
-            );
-          } else {
-            return Text('data');
-          }
-        }
-        )
-      // FutureBuilder(
-      //   future: meal,
-      //  builder: (context, snapshot){
-      //   if (snapshot.connectionState == ConnectionState.waiting){
-      //     return const Center(child: CircularProgressIndicator(),);
-      //   } else if (snapshot.hasError){
-      //     return Center(child: Text(snapshot.error.toString()),);
-      //   } else if (snapshot.hasData) {
-      //     Meal meal = snapshot.data!;
-      //     return Column(
-      //       children: [
-      //         Image.network(meal.thumb),
-      //         Text(meal.name)
-      //       ]
-      //     );
-      //   } else {
-      //       return const Center(child: Text('No data available'));
-      //     }
-      //  },
-      //  )
-    );
+            )
+          ]))
+        ]);
+      } else if(state is MealsError){
+        final message = state.message;
+        return Center(child: Text(message));
+      } else {
+        return const Center(child: Text('List of meals is empty'));
+      }
+    })
+        );
   }
-
 }
