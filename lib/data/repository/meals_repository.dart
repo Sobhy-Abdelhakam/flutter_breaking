@@ -7,13 +7,11 @@ class MealsRepository {
 
   MealsRepository(this._mealsService);
 
-  Future<List<MealsByCategory>> getMeals() async {
-    final meals = await _mealsService.getMeals();
-    return meals;
+  Future<List<MealsByCategory>> getMeals() {
+    return _mealsService.getMeals();
   }
 
-  Future<Meal> getMealDetails(String mealId) async {
-    final meal = await _mealsService.getMeal(mealId);
-    return meal;
+  Future<Meal> getMealDetails(String mealId) {
+    return _mealsService.getMeal(mealId);
   }
 }

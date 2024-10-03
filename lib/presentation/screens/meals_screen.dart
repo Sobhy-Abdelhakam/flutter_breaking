@@ -1,26 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_breaking/business_logic/cubit/cubit/meals_cubit.dart';
+import 'package:flutter_breaking/business_logic/cubit/meals_cubit.dart';
 import 'package:flutter_breaking/constants/strings.dart';
-import 'package:flutter_breaking/data/model/meals_by_category.dart';
 
-class MealsScreen extends StatefulWidget {
+class MealsScreen extends StatelessWidget {
   const MealsScreen({super.key});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _MealsState();
-  }
-}
-
-class _MealsState extends State<MealsScreen> {
-  late List<MealsByCategory> allMeals;
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<MealsCubit>(context).getAllMeals();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +14,11 @@ class _MealsState extends State<MealsScreen> {
       ),
       body: BlocBuilder<MealsCubit, MealsState>(
         builder: (context, state) {
-          if (state is MealsLoading){
+          if (state is MealsLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           } else if (state is MealsLoaded) {
-            allMeals = state.meals;
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -44,9 +28,9 @@ class _MealsState extends State<MealsScreen> {
               shrinkWrap: true,
               physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.zero,
-              itemCount: allMeals.length,
+              itemCount: state.meals.length,
               itemBuilder: (context, index) {
-                final meal = allMeals[index];
+                final meal = state.meals[index];
                 return Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(8),
@@ -55,8 +39,9 @@ class _MealsState extends State<MealsScreen> {
                       color: Colors.amber,
                       borderRadius: BorderRadius.circular(8)),
                   child: InkWell(
-                    onTap: (){
-                      Navigator.pushNamed(context, mealDetailsScreen, arguments: meal.mealId);
+                    onTap: () {
+                      Navigator.pushNamed(context, mealDetailsScreen,
+                          arguments: meal.mealId);
                     },
                     child: GridTile(
                       footer: Container(
@@ -89,16 +74,17 @@ class _MealsState extends State<MealsScreen> {
                 );
               },
             );
-          } else if (state is MealDetailsError) {
+          } else if (state is MealsError) {
             final message = state.message;
             return Center(
               child: Text(message),
             );
-          } else {
-            return const Center(child: Text('No Data found'),);
           }
+          return const Center(
+            child: Text('No Data found'),
+          );
         },
       ),
     );
-  }
+  } 
 }

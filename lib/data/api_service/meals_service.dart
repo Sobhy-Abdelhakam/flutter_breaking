@@ -32,8 +32,9 @@ class MealsService {
       queryParameters: {'i': mealId},
     );
     if (response.statusCode == 200) {
-      List mealResponse = response.data['meals'];
-      return mealResponse.map((meal) => Meal.fromJson(meal)).toList().first;
+      // because meal details response is list with one item, so I get the first item from this list
+      final mealResponse = response.data['meals'][0];
+      return Meal.fromJson(mealResponse);
     } else {
       throw Exception('Failed to load meal');
     }

@@ -7,6 +7,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_breaking/app_router.dart';
+import 'package:flutter_breaking/data/api_service/meals_service.dart';
+import 'package:flutter_breaking/data/repository/meals_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_breaking/main.dart';
@@ -14,7 +16,7 @@ import 'package:flutter_breaking/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(CheckenMealsApp(appRouter: AppRouter(),));
+    await tester.pumpWidget(CheckenMealsApp(appRouter: AppRouter(), mealsRepository: MealsRepository(MealsService()),));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
