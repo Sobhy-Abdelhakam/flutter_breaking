@@ -14,11 +14,11 @@ class MealsScreen extends StatelessWidget {
       ),
       body: BlocBuilder<MealsCubit, MealsState>(
         builder: (context, state) {
-          if (state is MealsLoading) {
+          if (state.isLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (state is MealsLoaded) {
+          } else if (state.meals.isNotEmpty) {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -74,10 +74,10 @@ class MealsScreen extends StatelessWidget {
                 );
               },
             );
-          } else if (state is MealsError) {
-            final message = state.message;
+          } else if (state.error != null) {
+            final message = state.error;
             return Center(
-              child: Text(message),
+              child: Text(message!),
             );
           }
           return const Center(

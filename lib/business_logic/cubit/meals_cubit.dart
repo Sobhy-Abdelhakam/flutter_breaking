@@ -8,18 +8,18 @@ part 'meals_state.dart';
 class MealsCubit extends Cubit<MealsState> {
   final MealsRepository _mealsRepository;
 
-  MealsCubit(this._mealsRepository) : super(MealsInitial());
+  MealsCubit(this._mealsRepository) : super(MealsState());
 
   getAllMeals() {
-    emit(MealsLoading());
+    emit(MealsState(isLoading: true));
     try {
       _mealsRepository.getMeals().then(
       (meals) {
-        emit(MealsLoaded(meals));
+        emit(MealsState(isLoading: false, meals: meals));
       },
     );
     } catch (e) {
-      emit(MealsError(e.toString()));
+      emit(MealsState(isLoading: false, error: e.toString()));
     }
     
   }
